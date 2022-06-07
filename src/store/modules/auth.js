@@ -1,18 +1,45 @@
+import authApi from '@/api/auth';
+
 const state = {
 	isSubmitting: false
 }
 
 const mutations = {
+	//start
 	registerStart(state) {
-		state.isSubmitting = true
+		state.isSubmitting = true;
+	},
+	//success
+	registerSuccess(state) {
+		state.isSubmitting = false;
+	},
+	//fail
+	registerFailure(state) {
+		state.isSubmitting = false;
 	}
 }
 
 const actions = {
-	register(context) {
-		setTimeout(() => {
+	register(context, credentials) {
+		return new Promise(resolve => {
 			context.commit('registerStart');
-		}, 1000)
+			authApi
+				.register(credentials)
+				.then(response => {
+					console.log('response', response);
+
+					//commit mustation/change state
+					context.commit('registerSuccess', response.data.user);
+					resolve(response.data.user);
+				})
+				.catch(result => { 
+					context.commit('registerFailure', result.response.data.errors);
+					console.log('result errors', result);
+				})
+		})
+		// setTimeout(() => {
+		// 	context.commit('registerStart');
+		// }, 1000)
 	}
 }
 
