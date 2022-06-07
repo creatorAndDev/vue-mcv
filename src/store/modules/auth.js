@@ -1,4 +1,5 @@
 import authApi from '@/api/auth';
+import {setItem} from '@/helpers/persistanceStorage'
 
 const state = {
 	isSubmitting: false,
@@ -35,6 +36,12 @@ const actions = {
 				.then(response => {
 					//commit mustation/change state
 					context.commit('registerSuccess', response.data.user);
+
+					//save token in local storage (wrapper - persustanceStorage)
+					setItem('accessToken', response.data.user.token);
+					//save token in local storage
+					// window.localStorage.setItem('accessToken', response.data.user.token);
+					
 					resolve(response.data.user);
 				})
 				.catch(result => { 
