@@ -11,14 +11,20 @@ const state = {
 export const mutationTypes = {
 	registerStart: '[auth] registerStart',
 	registerSuccess: '[auth] registerSuccess',
-	registerFailure: '[auth] registerFailure'
+	registerFailure: '[auth] registerFailure',
+
+	loginStart: '[auth] registerStart',
+	loginSuccess: '[auth] registerSuccess',
+	loginFailure: '[auth] registerFailure'
 }
 
 export const actionTypes = {
-	register: '[auth] register'
+	register: '[auth] register',
+	login: '[auth] login'
 }
 
 const mutations = {
+	//register
 	//start
 	[mutationTypes.registerStart](state) {
 		state.isSubmitting = true;
@@ -34,15 +40,30 @@ const mutations = {
 	[mutationTypes.registerFailure](state, payload) {
 		state.isSubmitting = false;
 		state.validationErrors = payload;
+	},
+
+	//login
+	[mutationTypes.loginStart](state) {
+		state.isSubmitting = true;
+		state.validationErrors = null;
+	},
+	[mutationTypes.loginSuccess](state, payload) {
+		state.isSubmitting = false;
+		state.currentUser = payload;
+		state.isLoggedIn = true;
+	},
+	[mutationTypes.loginFailure](state, payload) {
+		state.isSubmitting = false;
+		state.validationErrors = payload;
 	}
 }
 
 const actions = {
+	//action register
 	[actionTypes.register](context, credentials) {
 		return new Promise(resolve => {
 			context.commit(mutationTypes.registerStart);
-			authApi
-				.register(credentials)
+			authApi.register(credentials)
 				.then(response => {
 					//commit mustation/change state
 					context.commit(mutationTypes.registerSuccess, response.data.user);
@@ -54,13 +75,31 @@ const actions = {
 					
 					resolve(response.data.user);
 				})
-				.catch(result => { 
+				.catch(result => {
 					context.commit(mutationTypes.registerFailure, result.response.data.errors);
 				})
-		})
+		});
 		// setTimeout(() => {
 		// 	context.commit('registerStart');
 		// }, 1000)
+	},
+
+	//action login
+	[actionTypes.login](context, credentials) {
+		return new Promise(resolve => {
+			context.commit(mutationTypes.loginStart);
+			authApi.login(credentials)
+				.then(response => {
+					//commit mustation/change state
+					context.commit(mutationTypes.loginSuccess, response.data.user);
+
+					setItem('accessToken', response.data.user.token);
+					resolve(response.data.user);
+				})
+				.catch(result => {
+					context.commit(mutationTypes.loginFailure, result.response.data.errors);
+				})
+		});
 	}
 }
 
