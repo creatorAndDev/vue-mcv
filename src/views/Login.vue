@@ -12,8 +12,8 @@
 					
 					<mcv-validation-errors 
 						v-if='validationErrors'
-						:validationErrors='validationErrors' 
-					/>
+						:validation-errors='validationErrors' 
+					></mcv-validation-errors>
 					
 					<form @submit.prevent="onSubmit">
 						<fieldset class="form-group">
@@ -57,7 +57,7 @@ export default {
 	components: {
 		McvValidationErrors
 	},
-	data (){
+	data() {
 		return {
 			email: '',
 			password: ''
@@ -69,29 +69,18 @@ export default {
 			isSubmitting: state => state.auth.isSubmitting,
 			validationErrors: state => state.auth.validationErrors
 		})
-		// isSubmitting() {
-		// 	return this.$store.state.auth.isSubmitting;
-		// },
-		// validationErrors(){
-		// 	return this.$store.state.auth.validationErrors;
-		// }
 	},
 	methods: {
 		onSubmit() {
-			// console.log('submitted form');
 			this.$store
 			.dispatch(actionTypes.login, {
 				email: this.email,
 				password: this.password
 			})
 			.then(() => {
-				// console.log('successfully register user', user);
-				this.$router.push({
-					//alias router page home
-					name: 'home'
-				})
+				this.$router.push({name: 'home'})
 			})
 		}
-	},
+	}
 };
 </script>

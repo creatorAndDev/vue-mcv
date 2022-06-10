@@ -13,7 +13,7 @@
 					<mcv-validation-errors 
 						v-if='validationErrors'
 						:validationErrors='validationErrors' 
-					/>
+					></mcv-validation-errors>
 					
 					<form @submit.prevent="onSubmit">
 						<fieldset class="form-group">
@@ -65,7 +65,7 @@ export default {
 	components: {
 		McvValidationErrors
 	},
-	data (){
+	data() {
 		return {
 			email: '',
 			password: '',
@@ -73,12 +73,6 @@ export default {
 		}
 	},
 	computed: {
-		// isSubmitting() {
-		// 	return this.$store.state.auth.isSubmitting;
-		// },
-		// validationErrors(){
-		// 	return this.$store.state.auth.validationErrors;
-		// }
 		...mapState({
 			isSubmitting: state => state.auth.isSubmitting,
 			validationErrors: state => state.auth.validationErrors
@@ -86,21 +80,14 @@ export default {
 	},
 	methods: {
 		onSubmit() {
-			console.log('submitted form');
-			// this.$store.commit('registerStart');
-			//mutation - commit
-			//actions - dispatch
-			this.$store.dispatch(actionTypes.register, {
+			this.$store
+			.dispatch(actionTypes.register, {
 				email: this.email,
 				username: this.username,
 				password: this.password
 			})
-			.then(user => {
-				console.log('successfully register user', user);
-				this.$router.push({
-					//alias router page home
-					name: 'home'
-				})
+			.then(() => {
+				this.$router.push({name: 'home'})
 			})
 		}
 	},
