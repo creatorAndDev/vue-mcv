@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 
 //modules import
 import auth from '@/store/modules/auth'
+import feed from '@/store/modules/feed'
 
 Vue.use(Vuex)
 
@@ -11,6 +12,7 @@ export default new Vuex.Store({
 	mutations: {},
 	actions: {},
 	modules: {
-		auth
+		auth,
+		feed
 	}
 })
