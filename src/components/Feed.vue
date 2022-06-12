@@ -3,7 +3,11 @@
 		<div v-if="isLoading">Loading...</div>
 		<div v-if="error">Something bad happend</div>
 		<div v-if="feed">
-			<div class="article-preview" v-for="(article, index) in feed.articles" :key="index">
+			<div 
+				class="article-preview"
+				v-for="(article, index) in feed.articles" 
+				:key="index"
+			>
 				<div class="article-meta">
 					<router-link :to="{
 							name: 'userProfile', 
@@ -41,10 +45,10 @@
 				</router-link>
 			</div>
 			<mcv-pagination 
-				:total="total"
-				:limit="limit" 
+				:total="feed.articlesCount"
+				:limit="limit"
+				:url="baseUrl"
 				:current-page="currentPage"
-				:url="url"
 			/>
 		</div>
 	</div>
@@ -52,26 +56,22 @@
 
 <script>
 import {mapState} from 'vuex'
+//query-string
+import {stringify, parseUrl} from 'query-string'
+
 import {actionTypes} from '@/store/modules/feed'
 import McvPagination from '@/components/Pagination'
+import {limit} from '@/helpers/vars.js'
 
 export default {
 	name: 'McvFeed',
+	components: {
+		McvPagination
+	},
 	props: {
 		apiUrl: {
 			type: String,
 			required: true
-		}
-	},
-	components: {
-		McvPagination
-	},
-	data() {
-		return {
-			total: 500,
-			limit: 10,
-			currentPage: 5,
-			url: '/'
 		}
 	},
 	computed: {
@@ -79,10 +79,44 @@ export default {
 			isLoading: state => state.feed.isLoading,
 			feed: state => state.feed.data,
 			error: state => state.feed.error
-		})
+		}),
+		limit() {
+			return limit;
+		},
+		baseUrl() {
+			// console.log('baseUrl', this.$route);
+			return this.$route.path;
+		},
+		currentPage() {
+			// console.log('currentPage', this.$route);
+			return Number(this.$route.query.page || '1');
+		},
+		offset() {
+			return this.currentPage * limit - limit;
+		}
+	},
+	watch: {
+		currentPage() {
+			console.log('currentPage change');
+			this.fetchFeed();
+		}
 	},
 	mounted() {
-		this.$store.dispatch(actionTypes.getFeed, {apiUrl: this.apiUrl});
+		console.log('init feed');
+		this.fetchFeed();
+	},
+	methods: {
+		fetchFeed() {
+			const parsedUrl = parseUrl(this.apiUrl);
+			const stringifyParams = stringify({
+				limit,
+				offset: this.offset,
+				...parsedUrl.query
+			});
+			const apiUrlWithParams = `${parsedUrl.url}?${stringifyParams}`;
+			console.log(apiUrlWithParams);
+			this.$store.dispatch(actionTypes.getFeed, {apiUrl: apiUrlWithParams});
+		}
 	}
 }
 </script>

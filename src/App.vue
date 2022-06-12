@@ -1,7 +1,6 @@
 <template>
-	<div>
+	<div id="app">
 		<mcv-topbar />
-
 		<router-view />
 	</div>
 </template>

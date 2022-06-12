@@ -1,10 +1,9 @@
-import feedApi from '@/api/feed'
+import feedApi from '@/api/feed.js'
 
 const state = {
 	data: null,
 	isLoading: false,
 	error: null
-
 }
 
 export const mutationTypes = {
