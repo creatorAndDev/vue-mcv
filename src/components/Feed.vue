@@ -98,7 +98,7 @@ export default {
 			return Number(this.$route.query.page || '1');
 		},
 		baseUrl() {
-			console.log('baseUrl: ', this.$route);
+			// console.log('baseUrl: ', this.$route);
 			return this.$route.path;
 		},
 		offset() {
