@@ -2,6 +2,7 @@
 	<div>
 		<div v-if="isLoading">Loading...</div>
 		<div v-if="error">Something bad happend</div>
+		
 		<div v-if="feed">
 			<div 
 				class="article-preview"
@@ -47,8 +48,8 @@
 			<mcv-pagination 
 				:total="feed.articlesCount"
 				:limit="limit"
-				:url="baseUrl"
 				:current-page="currentPage"
+				:url="baseUrl"
 			/>
 		</div>
 	</div>
@@ -56,12 +57,13 @@
 
 <script>
 import {mapState} from 'vuex'
-//query-string
-import {stringify, parseUrl} from 'query-string'
 
 import {actionTypes} from '@/store/modules/feed'
 import McvPagination from '@/components/Pagination'
 import {limit} from '@/helpers/vars.js'
+
+// query-string
+import {stringify, parseUrl} from 'query-string'
 
 export default {
 	name: 'McvFeed',
@@ -74,6 +76,14 @@ export default {
 			required: true
 		}
 	},
+	// data() {
+	// 	return {
+	// 		// total: 500,
+	// 		// limit,
+	// 		// currentPage: 1,
+	// 		url: '/'
+	// 	}
+	// },
 	computed: {
 		...mapState({
 			isLoading: state => state.feed.isLoading,
@@ -83,13 +93,13 @@ export default {
 		limit() {
 			return limit;
 		},
-		baseUrl() {
-			// console.log('baseUrl', this.$route);
-			return this.$route.path;
-		},
 		currentPage() {
 			// console.log('currentPage', this.$route);
 			return Number(this.$route.query.page || '1');
+		},
+		baseUrl() {
+			console.log('baseUrl: ', this.$route);
+			return this.$route.path;
 		},
 		offset() {
 			return this.currentPage * limit - limit;
@@ -97,12 +107,13 @@ export default {
 	},
 	watch: {
 		currentPage() {
-			console.log('currentPage change');
+			// console.log('currentPage change');
 			this.fetchFeed();
 		}
 	},
 	mounted() {
-		console.log('init feed');
+		// console.log('init feed');
+		// this.$store.dispatch(actionTypes.getFeed, {apiUrl: this.apiUrl});
 		this.fetchFeed();
 	},
 	methods: {
@@ -113,8 +124,14 @@ export default {
 				offset: this.offset,
 				...parsedUrl.query
 			});
+			// console.log('Parse URL: ', parsedUrl, stringifyParams);
+			
 			const apiUrlWithParams = `${parsedUrl.url}?${stringifyParams}`;
-			console.log(apiUrlWithParams);
+			// console.log('Api with params: ', apiUrlWithParams);
+
+			// this.$store.dispatch(actionTypes.getFeed, {apiUrl: this.apiUrl});
+			// console.log('Api URL: ', this.apiUrl);
+			
 			this.$store.dispatch(actionTypes.getFeed, {apiUrl: apiUrlWithParams});
 		}
 	}
