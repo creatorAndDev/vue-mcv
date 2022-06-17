@@ -1,6 +1,5 @@
 <template>
-	<div>
-		<div class="home-page"></div>
+	<div class="home-page">
 		<mcv-banner />
 		<div class="container page">
 			<div class="row">
