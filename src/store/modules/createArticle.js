@@ -40,7 +40,7 @@ const actions = {
 					);
 					resolve(article);
 				})
-				.catch((result) => {
+				.catch(result => {
 					context.commit(
 						mutationTypes.createArticleFailure,
 						result.response.data.errors
