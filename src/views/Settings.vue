@@ -107,7 +107,7 @@ export default {
 	},
 	methods: {
 		onSubmit() {
-			console.log('submitting methods: ', this.form);
+			// console.log('submitting methods: ', this.form);
 
 			this.$store.dispatch(authActionTypes.updateCurrentUser, {
 				currentUserInput: this.form
@@ -117,7 +117,12 @@ export default {
 			})
 		},
 		logout() {
-			console.log('logout')
+			// console.log('logout');
+
+			this.$store.dispatch(authActionTypes.logout)
+			.then(() => {
+				this.$router.push({name: 'globalFeed'})
+			})
 		}
 	}
 }

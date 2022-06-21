@@ -24,14 +24,17 @@ export const mutationTypes = {
 
 	updateCurrentUserStart: '[auth] Update current user start',
 	updateCurrentUserSuccess: '[auth] Update current user success',
-	updateCurrentUserFailure: '[auth] Update current user failure'
+	updateCurrentUserFailure: '[auth] Update current user failure',
+
+	logout: '[auth] Logout'
 }
 
 export const actionTypes = {
 	register: '[auth] register',
 	login: '[auth] login',
 	getCurrentUser: '[auth] Get current user',
-	updateCurrentUser: '[auth] Update current user'
+	updateCurrentUser: '[auth] Update current user',
+	logout: '[auth] Logout'
 }
 
 export const getterTypes = {
@@ -101,12 +104,18 @@ const mutations = {
 		state.currentUser = null;
 	},
 
+	//update
 	[mutationTypes.updateCurrentUserStart]() {},
 	[mutationTypes.updateCurrentUserSuccess](state, payload) {
 		state.currentUser = payload;
 	},
-	[mutationTypes.updateCurrentUserFailure]() {}
+	[mutationTypes.updateCurrentUserFailure]() { },
 	
+	//logout
+	[mutationTypes.logout]() {
+		state.currentUser = null,
+		state.isLoggedIn = false
+	}
 }
 
 const actions = {
@@ -193,6 +202,14 @@ const actions = {
 					);
 				})
 		});
+	},
+
+	[actionTypes.logout](context) {
+		return new Promise(resolve => {
+			setItem('accessToken', '');
+			context.commit(mutationTypes.logout);
+			resolve();
+		})
 	}
 }
 
