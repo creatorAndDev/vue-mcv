@@ -30,7 +30,11 @@
 						</span>
 					</div>
 					<div class="pull-xs-right">
-						ADD TO FAVORITES
+						<mcv-add-to-favorites
+							:is-favorited="article.favorited"
+							:article-slug="article.slug"
+							:favorites-count="article.favoritesCount"
+						/>
 					</div>
 				</div>
 				<router-link :to="{
@@ -64,6 +68,7 @@ import {limit} from '@/helpers/vars.js'
 import McvLoading from '@/components/Loading'
 import McvErrorMessage from '@/components/ErrorMessage'
 import McvTagList from '@/components/TagList'
+import McvAddToFavorites from '@/components/AddToFavorites'
 
 // query-string
 import {stringify, parseUrl} from 'query-string'
@@ -74,7 +79,8 @@ export default {
 		McvPagination,
 		McvLoading,
 		McvErrorMessage,
-		McvTagList
+		McvTagList,
+		McvAddToFavorites
 	},
 	props: {
 		apiUrl: {
